@@ -23,6 +23,7 @@ public class ObjectHandler : MonoBehaviour
     [SerializeField] private Button moveButton;
     [SerializeField] private Button rotateButton;
     [SerializeField] private Button regenButton;
+    [SerializeField] private Button videoPlayerButton;
 
     [SerializeField] private AudioSource selectFurnitureAudioSource;
     [SerializeField] private AudioSource uiButtonAudioSource;
@@ -110,6 +111,9 @@ public class ObjectHandler : MonoBehaviour
     [SerializeField] private Sprite unfilledHeart;
     private int[] favFurnIds;
 
+    [Header("Video Playback")]
+    [SerializeField] private VideoPlaybackHandler videoPlaybackHandler;
+
 
     private void Awake()
     {
@@ -124,6 +128,13 @@ public class ObjectHandler : MonoBehaviour
         moveButton.gameObject.SetActive(false);
         rotateButton.gameObject.SetActive(false);
         regenButton.gameObject.SetActive(false);
+        
+        // Initialize video player button
+        if (videoPlayerButton != null)
+        {
+            videoPlayerButton.gameObject.SetActive(true);
+            videoPlayerButton.onClick.AddListener(OpenVideoPlayer);
+        }
 
         loadingPanelText.text = "Waiting for data...";
         loadingPanel.SetActive(true);
@@ -886,5 +897,21 @@ public class ObjectHandler : MonoBehaviour
         debugText.text = "No furniture available for that type!";
         yield return new WaitForSeconds(3);
         debugText.text = "";
+    }
+    
+    public void OpenVideoPlayer()
+    {
+        if (videoPlaybackHandler != null)
+        {
+            videoPlaybackHandler.OpenVideoPlayer();
+            if (uiButtonAudioSource != null)
+            {
+                uiButtonAudioSource.Play();
+            }
+        }
+        else
+        {
+            Debug.LogWarning("VideoPlaybackHandler not assigned!");
+        }
     }
 }
